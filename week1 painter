@@ -1,0 +1,63 @@
+#include <iostream>
+using namespace std;
+bool check_success();
+int width;
+int main(int argc, const char * argv[]) {
+    // insert code here...
+    int t;
+    cin>>t;
+    for(int i=0;i<t;i++){
+        cin>>width;
+        int wall[width][width];//wall matrix yellow 1 white 0
+        for(int r=0;r<width;r++){
+            for (int c=0;c<width;c++){
+                char x;
+                cin>>x;
+                if(x=='y')wall[r][c]=1;
+                else wall[r][c]=0;
+                }
+        }
+        int paint[width+1][width+2];//initiate paint matrix
+        for(int i=0;i<width+1;i++){
+            for(int j=0;j<width+2;j++){
+                paint[i][j]=0;
+            }
+        }
+        int col=1;
+        int min=-1;//min steps
+        bool success=true;
+        while(col<width+1){
+        col=1;
+        while(true){
+            paint[1][col]++;
+            if(paint[1][col]==2){paint[1][col]=0;
+                col++;
+                if(col==width+1)break;}
+            else {//initiate first row
+                int step=0;//calculate steps
+                for(int i=1;i<width;i++){
+                    for(int j=1;j<width+1;j++){
+                        paint[i+1][j]=(wall[i][j]+paint[i][j]+paint[i-1][j]+paint[i][j-1]+paint[i][j+1])%2;
+                        if(paint[i+1][j]==1)step++;
+                    }
+                }
+                for(int j=0;j<width+1;j++){
+                    if((wall[width][j]+paint[width][j]+paint[width-1][j]+paint[width][j-1]+paint[width][j+1])%2==1)
+                    {success=false;break;}
+                        }
+                if(success){
+                if(min<0)min=step;
+                else if(min>step)min=step;
+                }
+            break;
+            }
+        }
+        }
+        if(min>=0)cout<<min<<endl;
+        else cout<<"inf"<<endl;
+        
+        
+    }
+        return 0;
+}
+
