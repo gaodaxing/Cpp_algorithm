@@ -1,22 +1,31 @@
+//
+//  main.cpp
+//  painter
+//
+//  Created by Daxing Gao on 16/11/28.
+//  Copyright © 2016年 Daxing Gao. All rights reserved.
+//
+
 #include <iostream>
 using namespace std;
-bool check_success();
-int width;
+
 int main(int argc, const char * argv[]) {
     // insert code here...
     int t;
+    int width;
     cin>>t;
-    for(int i=0;i<t;i++){
+    for(int count=0;count<t;count++){
         cin>>width;
-        int wall[width][width];//wall matrix yellow 1 white 0
-        for(int r=0;r<width;r++){
-            for (int c=0;c<width;c++){
+        int wall[width+1][width+2];//wall matrix yellow 1 white 0
+        for(int r=1;r<width+1;r++){
+            for (int c=1;c<width+1;c++){
                 char x;
                 cin>>x;
-                if(x=='y')wall[r][c]=1;
-                else wall[r][c]=0;
+                if(x=='y')wall[r][c]=0;
+                else wall[r][c]=1;
                 }
         }
+        
         int paint[width+1][width+2];//initiate paint matrix
         for(int i=0;i<width+1;i++){
             for(int j=0;j<width+2;j++){
@@ -26,6 +35,7 @@ int main(int argc, const char * argv[]) {
         int col=1;
         int min=-1;//min steps
         bool success=true;
+        paint[1][1]=-1;
         while(col<width+1){
         col=1;
         while(true){
@@ -34,6 +44,8 @@ int main(int argc, const char * argv[]) {
                 col++;
                 if(col==width+1)break;}
             else {//initiate first row
+                
+
                 int step=0;//calculate steps
                 for(int i=1;i<width;i++){
                     for(int j=1;j<width+1;j++){
@@ -41,12 +53,16 @@ int main(int argc, const char * argv[]) {
                         if(paint[i+1][j]==1)step++;
                     }
                 }
-                for(int j=0;j<width+1;j++){
-                    if((wall[width][j]+paint[width][j]+paint[width-1][j]+paint[width][j-1]+paint[width][j+1])%2==1)
+                for(int j=1;j<width+1;j++){
+                    step+=paint[1][j];
+                }
+                success=true;
+                for(int j=1;j<width+1;j++){
+                    if((wall[width][j]+paint[width-1][j]+paint[width][j]+paint[width][j-1]+paint[width][j+1])%2==1)
                     {success=false;break;}
                         }
                 if(success){
-                if(min<0)min=step;
+                   if(min<0)min=step;
                 else if(min>step)min=step;
                 }
             break;
@@ -59,5 +75,6 @@ int main(int argc, const char * argv[]) {
         
     }
         return 0;
-}
+};
+
 
