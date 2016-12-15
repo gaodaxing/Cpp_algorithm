@@ -1,0 +1,31 @@
+#include <iostream>
+#include<algorithm>
+using namespace std;
+
+int main(int argc, const char * argv[]) {
+    // insert code here...
+    int t,sum,s[10000],a[10000],sl,al;
+    cin>>t;
+    while(t--){
+        int count=0;
+        cin>>sum;
+        cin>>sl;
+        for(int i=0;i<sl;i++){
+            cin>>s[i];
+        }
+        cin>>al;
+        for(int i=0;i<al;i++){
+            cin>>a[i];
+        }
+        sort(s,s+sl);
+        sort(a,a+al);
+        for(int i=0;i<al;i++){
+            for(int j=0;j<sl;j++){
+                if(s[j]+a[i]==sum)count++;
+                else if(s[j]+a[i]>sum)break;
+            }
+        }
+        cout<<count<<endl;
+    }
+    return 0;
+}
