@@ -1,0 +1,25 @@
+
+#include <iostream>
+using namespace std;
+
+int solve(int m){
+    if(m==0)return 1;
+    if(m==2)return 3;
+    return (solve(m-2)*4-solve(m-4));
+    
+}
+
+int main() {
+    // insert code here...
+    int n;
+    int res;
+    cin>>n;
+    while(n!=-1){
+        if(n%2==0){
+        res=solve(n);
+            cout<<res<<endl;}
+        else cout<<0<<endl;
+        cin>>n;
+    }
+    return 0;
+}
