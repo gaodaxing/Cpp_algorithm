@@ -2,43 +2,39 @@
 #define Max 100
 #include<algorithm>
 using namespace std;
-struct h{
-    int height;
-    int x,y,route;
-    h(){}
-    h(int n,int i,int j):height(n),x(i),y(j){}
-    bool operator<(h h2){return height>h2.height;}
+struct h {
+	int height;
+	int x, y, route;
+	h() {}
+	h(int n, int i, int j) :height(n), x(i), y(j) {}
+	bool operator<(h h2) { return height<h2.height; }
 };
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    int r,c,m[Max+1][Max+1],maxroute=0,x,y,mh[Max][Max];
-    h hh[Max*Max];
-    cin>>r>>c;
-    for(int i=0;i<r;i++){
-        for(int j=0;j<c;j++){
-            cin>>mh[i][j];
-            h hhh(mh[i][j],i,j);
-            hh[i*c+j]=hhh;
-        }
-    }
-    for(int i=0;i<r+2;i++){
-        for(int j=0;j<c+2;j++){
-            if((i*j==0)|(i==r+1)|(j==c+1))m[i][j]=-1;
-            else m[i][j]=1;
-        }
-    }
-    sort(hh,hh+c*r);
-    for(int i=0;i<r*c;i++){
-        x=hh[i].x;
-        y=hh[i].y;
-        if((m[x-1][y]>0)&(hh[i].height>mh[x-1][y])&(m[x][y]-1<m[x-1][y])){m[x][y]=m[x-1][y]+1;if(maxroute<m[x][y])maxroute=m[x][y];}
-        if((m[x+1][y]>0)&(hh[i].height>mh[x+1][y])&(m[x][y]-1<m[x+1][y])){m[x][y]=m[x+1][y]+1;if(maxroute<m[x][y])maxroute=m[x][y];}
-        if((m[x][y-1]>0)&(hh[i].height>mh[x][y-1])&(m[x][y]-1<m[x][y-1])){m[x][y]=m[x][y-1]+1;if(maxroute<m[x][y])maxroute=m[x][y];}
-        if((m[x][y+1]>0)&(hh[i].height>mh[x][y+1])&(m[x][y]-1<m[x][y+1])){m[x][y]=m[x][y+1]+1;if(maxroute<m[x][y])maxroute=m[x][y];}
-        
-    }
-    cout<<maxroute;
-    
-    return 0;
+	// insert code here...
+	int r, c, m[Max + 1][Max + 1], maxroute = 0, x, y, mh[Max][Max];
+	h hh[Max*Max];
+	cin >> r >> c;
+	for (int i = 0; i<r; i++) {
+		for (int j = 0; j<c; j++) {
+			cin >> mh[i][j];
+			h hhh(mh[i][j], i, j);
+			hh[i*c + j] = hhh;
+			m[i][j] = 1;
+		}
+	}
+	
+	sort(hh, hh + c*r);
+	for (int i = 0; i<r*c; i++) {
+		x = hh[i].x;
+		y = hh[i].y;
+		if ((x>0)&(hh[i].height>mh[x - 1][y])&(m[x][y] - 1<m[x - 1][y])) { m[x][y] = m[x - 1][y] + 1; if (maxroute<m[x][y])maxroute = m[x][y]; }
+		if ((x<r-1)&(hh[i].height>mh[x + 1][y])&(m[x][y] - 1<m[x + 1][y])) { m[x][y] = m[x + 1][y] + 1; if (maxroute<m[x][y])maxroute = m[x][y]; }
+		if ((y>0)&(hh[i].height>mh[x][y - 1])&(m[x][y] - 1<m[x][y - 1])) { m[x][y] = m[x][y - 1] + 1; if (maxroute<m[x][y])maxroute = m[x][y]; }
+		if ((y<c-1)&(hh[i].height>mh[x][y + 1])&(m[x][y] - 1<m[x][y + 1])) { m[x][y] = m[x][y + 1] + 1; if (maxroute<m[x][y])maxroute = m[x][y]; }
+
+	}
+	cout << maxroute;
+
+	return 0;
 }
