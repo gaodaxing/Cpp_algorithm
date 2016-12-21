@@ -1,0 +1,37 @@
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+#include <cstdlib>
+using namespace std;
+#define max 1000
+
+int main() {
+    // insert code here...
+    unsigned record[max][max];//n, maxnum
+    memset(record,0,sizeof(record));
+    record[1][1]=1;
+    record[2][1]=1;
+    record[2][2]=1;
+    
+    for(int i=3;i<max;i++){
+        record[i][i]=1;
+        if(i%2==0){record[i][i/2]=1;}
+        for(int j=1;j*3<=i;j++){
+                            //record[i][j]=0;
+                //cout<<"j:"<<j<<endl;
+            
+                int m=i-2*j;
+            
+                for(int k=j;k<=m;k++)record[i][j]=record[i][j]+record[m][k];
+            
+        }
+    }
+    int n;
+    while(cin>>n&&(n!=0)){
+        
+        unsigned sum=0;
+        for(int i=1;i<=n;i++)sum=sum+record[n][i];
+        cout<<n<<" "<<sum<<endl;
+    }
+    return 0;
+}
