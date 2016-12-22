@@ -1,54 +1,44 @@
-//
-//  main.cpp
-//  week4_charm
-//
-//  Created by Daxing Gao on 16/12/21.
-//  Copyright © 2016年 Daxing Gao. All rights reserved.
+// ConsoleApplication19.cpp : Defines the entry point for the console application.
 //
 
+//#include "stdafx.h"
+
+#include <iostream>
 #include <iostream>
 #include<algorithm>
 #include<cstring>
 using namespace std;
 #define max 3402
+#define max2 12881
 
-struct charm{
-    int w;
-    int d;
-    bool operator<(const charm a)const{return w<a.w;}
+struct charm {
+	int w;
+	int d;
+	bool operator<(const charm a)const { return w<a.w; }
 };
 
 int main() {
-    int n,m;//n input, m weight limit
-    int mm[12881][max];//max charm for each m；m,n input
-    
-    charm Charm[max];
-    cin>>n>>m;
-    memset(mm,0,sizeof(mm));
-    int i=0;
-    while(n--){
-        cin>>Charm[i].w>>Charm[i].d;
-        i++;
-    }
-    sort(Charm,Charm+n);
-    for(int i=1;i<=12880;i++){
-        
-           for(int j=0;j<n;j++){
-               if(j==0&Charm[j].w<=i)mm[i][j]=1;
-               else{
-               if(Charm[j].w>i)mm[i][j]=0;
-               else {
-                   int mmij=mm[i-Charm[j].w][j-1]+Charm[j].w;
-                   if(mmij>mm[i][j])mm[i][j]=mmij;
-               }
-               }
-           }
-           }
-           int maxd=0;
-           for(int i=0;i<n;i++){
-               if(mm[m][i]>maxd)maxd=mm[m][i];
-           }
-           cout<<maxd<<endl;
-           
-           return 0;
-           }
+	int n, m;//n input, m weight limit
+	int mm[max2];//max charm for each m；
+	charm Charm[max];
+	cin >> n >> m;
+	memset(mm, 0, sizeof(mm));
+	int i = 0;
+	while (n--) {
+		cin >> Charm[i].w >> Charm[i].d;
+		i++;
+	}
+	//sort(Charm, Charm + n);
+	for (int i = 0; i < n; i++) {
+		cout << Charm[i].w << " " << Charm[i].d << endl;
+	}
+	for (int i = 1; i <= m; i++) {
+		for (int j = n - 1; Charm[j].w <= i; j--) {
+			mm[i] = ((mm[i - Charm[j].w] + Charm[j].d) > mm[i]) ? (mm[i - Charm[j].w] + Charm[j].d) : mm[i];
+		}
+	}
+
+	cout << mm[m] << endl;
+
+	return 0;
+}
