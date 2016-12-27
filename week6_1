@@ -1,0 +1,62 @@
+// ConsoleApplication20.cpp : Defines the entry point for the console application.
+//
+
+//#include "stdafx.h"
+#include<iostream>
+#include<cstring>
+using namespace std;
+#define max 10
+int Count=0;
+int usedr[max], usedc[max];
+int chess[max*max][2];
+
+void Dfs(int k,int nxt) {
+	if (k == 0) {
+		//cout << nxt << endl;
+		Count++; 
+	}
+	else {
+		for (int i = nxt; chess[i][0]>=0; i++) {
+			//cout << i << "k:"<<k<<endl;
+			int ii = chess[i][0];
+			int jj = chess[i][1];
+			if (usedr[ii] == 0 && usedc[jj] == 0) {
+				usedr[ii] = 1;
+				usedc[jj] = 1;
+				//nxt++;
+				//cout << k - 1 << " " << nxt << endl;
+				Dfs(k - 1, i+1);
+				usedr[ii] = 0;
+				usedc[jj] = 0;
+			}
+		}
+	}
+};
+int main()
+{
+	int n, k;
+	while (cin >> n >> k) {
+		if (n == -1 || k == -1)break;
+		memset(chess,-1, sizeof(chess));
+		int r = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				char x;
+				cin >> x;
+				if (x == '#') {
+					chess[r][0] = i; chess[r][1] = j;
+					r++;
+				}
+			}			
+		}
+		
+		memset(usedr, 0, sizeof(usedr));
+		memset(usedc, 0, sizeof(usedc));
+		Count = 0;
+		Dfs(k,0);
+		cout << Count << endl;
+
+	}
+    return 0;
+}
+
