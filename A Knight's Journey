@@ -1,0 +1,66 @@
+// ConsoleApplication22.cpp : Defines the entry point for the console application.
+//
+
+//#include "stdafx.h"
+#include<iostream>
+#include<cstring>
+using namespace std;
+#define max 30
+int used[max][max];
+int Move[8][2] = { { -2,-1 },{ -2,1 },{ -1,-2 },{ -1,2 },{ 1,-2 },{ 1,2 },{ 2,-1 },{ 2,1 } };
+int steps[max*max][2];
+int r = 0;
+
+bool Dfs(int x, int y, int left, int p, int q) {
+	if (left == 0) {
+		return true; }
+	else {
+		if (x == 0 && y == 0) {
+			used[x][y] = 1; r++;
+			steps[0][0] = 0;
+			steps[0][1] = 0;
+		}
+		for (int i = 0; i < 8; i++) {
+			int xm, ym;
+			xm =x+ Move[i][0];
+			ym =y+ Move[i][1];
+			if (xm >= 0 && ym >= 0 && xm < p && ym < q&& used[xm][ym] == 0) {
+				used[xm][ym] = 1;
+				steps[r][0] = xm;
+				steps[r][1] = ym;
+				r++;
+				bool rr=Dfs(xm, ym, left - 1, p, q);
+				if (rr)return true;
+				r--;
+				used[xm][ym] = 0;
+			}
+		}
+		return false;
+	}
+}
+void print_steps(int sum){
+	for (int i = 0; i < sum; i++) {
+		char a = 'A' + steps[i][0];
+		cout <<  a<< steps[i][1]+1;
+	}
+}
+int main()
+{
+	int t,i=1;
+	cin >> t;
+	while (t--) {
+		int p, q;
+		cin >> q >> p;
+		memset(used, 0, sizeof(used));
+		r = 0;
+		memset(steps, 0, sizeof(steps));
+		bool res=Dfs(0, 0, p*q-1, p, q);
+		cout << "Scenario #" << i << ":" << endl;
+		if (res)print_steps(p*q);
+		else cout << "impossible";
+		cout << endl;
+		i++;
+	}
+    return 0;
+}
+
