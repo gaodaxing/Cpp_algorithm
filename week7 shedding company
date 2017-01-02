@@ -1,0 +1,113 @@
+// ConsoleApplication24.cpp : Defines the entry point for the console application.
+//
+
+//#include "stdafx.h"
+#include<iostream>
+#include<cstring>
+using namespace std;
+int mm[6];
+int c;
+int con_digi(int m) {
+	int i = 5;
+	while (m != 0) {
+		mm[i] = m % 10;
+		m = m / 10;
+		i--;
+	}
+	return (5 - i);
+}
+int max_num;
+int max_route[6];
+
+int level = 0;
+void Dfs(int n, int i, int sum, int *route) {//limit,digit,sum
+											 //level++;
+	if (i == 6) {
+		if (sum == max_num)c++;
+		else if (sum > max_num) {
+			max_num = sum; c = 1;
+			for (int j = 0; j<6; j++) {
+				max_route[j] = route[j];
+				//cout<<route[j]<<" ";
+			}
+			//cout<<endl;
+			//cout << c;
+			//cout << max_route[0] << " "<< max_route[1]<<" "<< max_route[2]<<" "<< max_route[3]<<endl;
+		}
+
+		return;
+	}
+	else {
+		//if (mm[i] == 0) {
+		//int q;
+		//for (q = 0; q < 6; q++) {
+		//if (route[q] < 0)break;
+		//}
+		//route[q] = 0;
+		//Dfs(n , i + 1, sum, route);
+		//route[q] = -1;
+
+		//}
+		//else {
+		for (int j = i; j < 6; j++) {//i to j as one number
+			int num = 0;
+			//cout << level << endl;
+			//if (level == 1)memset(route, -1, sizeof(route));
+			for (int l = i; l <= j; l++) {
+				num = num * 10 + mm[l];
+			}
+			if (num > n)break;
+			sum += num;
+			int rest = 0;
+			for (int p = j + 1; p < 6; p++) {
+				rest += mm[p];
+			}
+			if (rest + num > n)break;
+			//cout << n << " " << num << " " << j << " " << sum << endl;
+			int q;
+			for (q = 0; q < 6; q++) {
+				if (route[q] < 0)break;
+			}
+			route[q] = num;
+			Dfs(n - num, j + 1, sum, route);
+			sum -= num;
+			route[q] = -1;
+			//level--;
+			//}
+		}
+	}
+}
+
+int main()
+{
+	int n, m;
+	while (cin >> n >> m) {
+		if (n == 0 && m == 0)break;
+		memset(mm, -1, sizeof(mm));
+		memset(max_route, -1, sizeof(max_route));
+		int s = con_digi(m);
+		//cout << s;
+		max_num = -1;
+		int *route;
+		route = new int[6];
+		for (int j = 0; j<6; j++) {
+			route[j] = -1;
+		}
+		//memset(route, -1, sizeof(route));
+		//cout<<route[5]<<endl;
+		c = 0;
+		Dfs(n, 6 - s, 0, route);
+		//cout << c;
+		if (max_num == -1)cout << "error" << endl;
+		else if (c > 1)cout << "rejected" << endl;
+		else if (max_num >= 0 && c == 1)
+		{
+			cout << max_num << " " << max_route[0];
+			for (int i = 1; max_route[i] >= 0; i++)cout << " " << max_route[i];
+			cout << endl;
+		}
+
+	}
+	return 0;
+}
+
