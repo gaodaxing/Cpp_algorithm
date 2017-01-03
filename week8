@@ -1,39 +1,66 @@
-// ConsoleApplication26.cpp : Defines the entry point for the console application.
 //
-
-#include "stdafx.h"
+//  main.cpp
+//  week8_1
+//
+//  Created by Daxing Gao on 17/1/3.
+//  Copyright © 2017年 Daxing Gao. All rights reserved.
+//
 #include<iostream>
 #include<cstring>
 #include<queue>
+#include <bitset>
 using namespace std;
 struct piece {
-	int x;
-	int step;
-	piece(int m):x(m){}
+    int x;
+    int step;
+    piece(int m, int n):x(m),step(n){}
 };
-int visited[10000];
-void flip(int x, int m, int n) {
-	if()
+bool visited[100000];
+queue<piece> q;
+void flip(int b, int n, int i) {
+    int x=i/4;
+    int y=i%4;
+    b=b^(1<<i);
+    if(x>0){
+        b=b^1<<(i-4);
+        //cout<<n+1<<endl;
+    }
+    if(x<3){
+        b=b^1<<(i+4);
+    }
+    if(y>0){
+        b=b^1<<(i-1);
+    }
+    if(y<3){
+        b=b^1<<(i+1);
+    }
+    if(!visited[b]){
+        q.push(piece(b,n));
+        visited[b]=true;
+    }
 }
+
 int main()
 {
-	char rec[4][4];
-	int board = 0;
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			cin >> rec[i][j];
-			if (rec[i][j] == 'b') board=board|0x1<<i*4+j;
-		}
-	}
-	queue<piece> q;
-	q.push(piece(board));
-	while (!q.empty()) {
-		piece a = q.front();
-		if(a.x == 0 || a.x == 0x1 << 15)break;
-		else {
-
-		}
-	}
+    char rec[4][4];
+    int board = 0;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            cin >> rec[i][j];
+            if (rec[i][j] == 'b') board=board|1<<(i*4+j);
+        }
+    }
+    
+    memset(visited,false,sizeof(visited));
+    q.push(piece(board,0));
+    while (!q.empty()) {
+        piece a = q.front();
+        if(a.x == 0 || a.x == 65535){cout<<a.step<<endl;break;}
+        else {
+            for(int i=0;i<16;i++)flip(a.x,a.step+1,i);
+        }
+        q.pop();
+    }
+    if(q.empty())cout<<"Impossible"<<endl;
     return 0;
 }
-
