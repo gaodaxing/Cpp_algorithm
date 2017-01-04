@@ -1,0 +1,54 @@
+// ConsoleApplication27.cpp : Defines the entry point for the console application.
+//
+
+//#include "stdafx.h"
+#include<iostream>
+using namespace std;
+#include<cstring>
+#include<cstdio>
+#include<algorithm>
+int n[10010];
+bool check(int num,int N, int C) {
+	int c = 1;
+	int i = 1;
+	while (i < N) {
+		int j = 0;
+		for (; j + i < N; j++) {
+			if (n[j + i] - n[i - 1] >= num) {
+				c++; break;
+			}
+		}
+		i=i+j+1;
+		//cout << i << " ";
+		if (c >= C)return true;
+	}
+	return false;
+}
+
+int main()
+{
+	int N, C;	
+	scanf("%d%d", N, C);
+	int i = 0;
+	memset(n, -1, sizeof(n));
+	while (i < N) {
+		scanf("%d", &n[i]);
+		i++;
+	}
+	sort(n, n + N);
+	int left = 0;
+	int mid;
+	int right = (n[N - 1] - n[0]) / (C-1);
+	//cout << N << " " << C << endl;
+		//cout<< check(4, N, C);
+	while (left < right) {		
+		mid = (left + right+1) / 2;
+		//cout <<left<<" "<<right<<" "<< mid << endl;
+		if (check(mid, N, C)) {
+			left = mid;
+		}
+		else right = mid-1;		
+	}
+	printf("%d\n", left);
+    return 0;
+}
