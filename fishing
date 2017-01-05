@@ -1,0 +1,101 @@
+//
+//  main.cpp
+//  fishing
+//
+//  Created by Daxing Gao on 17/1/5.
+//  Copyright © 2017年 Daxing Gao. All rights reserved.
+//
+
+#include <iostream>
+#include<cstring>
+using namespace std;
+
+int main(int argc, const char * argv[]) {
+    int n,h;
+    while(cin>>n){
+        if(n==0)break;
+        cin>>h;
+        int f[30],d[30],t[30];
+        int i=0;
+        while(i<n){
+            cin>>f[i];
+            i++;
+        }
+        i=0;
+        while(i<n){
+            cin>>d[i];
+            i++;
+        }
+
+        for(i=0;i<n-1;i++){
+            cin>>t[i];
+            
+        }
+        
+        h=h*12;
+        int T[30],Tleft[30];
+        T[0]=0;
+        Tleft[0]=h;
+        
+        for(int j=1;j<n;j++){
+            T[j]=T[j-1]+t[j-1];
+            //cout<<T[j]<<endl;
+            Tleft[j]=h-T[j];
+            //cout<<Tleft[j]<<endl;
+        }
+        //for(int l=0;l<n;l++){
+        //cout<<Tleft[l]<<endl;
+        //}
+        int max_all=0;
+        int max_step[30];
+        //int max_unused=0;
+        
+        for(int p=0;Tleft[p]>0;p++){
+            //cout<<Tleft[p]<<",";
+            int step[30];
+            memset(step,0,sizeof(step));
+            int fc[30],dc[30];
+            int sum=0,max=-1;
+            //for(int q=0;q<30;q++){//copy f and d
+                //fc[q]=f[q];
+                //dc[q]=d[q];
+            //}
+            memcpy(fc,f,sizeof(f));
+            memcpy(dc,d,sizeof(d));
+            while(Tleft[p]>0){
+            max=0;
+            for(int r=0;r<=p;r++){//find max
+                if(max<fc[r])max=fc[r];
+            }
+                if(max==0){step[0]+=Tleft[p];break;}
+                for(int s=0;s<=p;s++){//add max
+                    if(fc[s]==max){
+                        fc[s]-=dc[s];
+                        step[s]++;
+                        Tleft[p]--;
+                        sum=max+sum;
+                        break;
+                    }
+                }
+            
+        }
+            
+            
+            //cout<<sum<<endl;
+            if(max_all<sum){
+                max_all=sum;
+                //int total=0;
+                for(int w=0;w<30;w++){max_step[w]=step[w];}
+                //max_unused=h-T[p]-total;
+            
+        }
+        }
+        cout<<5*(max_step[0]);
+            for(int v=1;v<n;v++){
+                cout<<", "<<5*max_step[v];
+            }
+        cout<<endl<<"Number of fish expected: "<<max_all<<endl<<endl;
+        
+    }
+    return 0;
+}
