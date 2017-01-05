@@ -1,0 +1,32 @@
+//
+//  main.cpp
+//  yogurt
+//
+//  Created by Daxing Gao on 17/1/5.
+//  Copyright © 2017年 Daxing Gao. All rights reserved.
+//
+
+#include <iostream>
+#include<cstring>
+using namespace std;
+
+int main(int argc, const char * argv[]) {
+    int N,S;
+    cin>>N>>S;
+    int C[10010],Y[10010];
+    int i=0;
+    long long sum=0;
+    while (i<N) {
+        cin>>C[i]>>Y[i];
+        i++;
+    }
+    int cost=C[0];
+    sum=cost*Y[0];
+    for(int j=1;j<N;j++){
+        cost=cost+S;
+        if(cost>C[j])cost=C[j];
+        sum+=cost*Y[j];
+    }
+    cout<<sum<<endl;
+    return 0;
+}
