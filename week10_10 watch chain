@@ -1,0 +1,66 @@
+//
+//  main.cpp
+//  week10_10
+//
+//  Created by Daxing Gao on 17/1/6.
+//  Copyright © 2017年 Daxing Gao. All rights reserved.
+//
+
+#include <iostream>
+#include<cstring>
+using namespace std;
+int chain[4];
+int nxt[4][2]={
+    {0,1},{2,3},{0,1},{2,3}
+};
+long long Count=0;
+void Dfs(int start,int end,int k){
+    if(k==1){
+        for(int i=0;i<2;i++){
+        int x=nxt[start][i];
+            if(chain[x]>0&&((nxt[x][0]==end)||(nxt[x][1]==end))){Count++;return;}
+        }
+        return;
+    }
+    else{
+        for(int i=0;i<2;i++){
+            int x=nxt[start][i];
+            if(chain[x]>0){
+            chain[x]--;            
+            Dfs(x,end,k-1);
+            chain[x]++;
+            }
+        }
+    }
+}
+
+int main(int argc, const char * argv[]) {
+    int N,K;
+    while(cin>>N>>K){
+        string w;
+        int start=0,end=0;
+        memset(chain,0,sizeof(chain));
+        cin>>w;//LL 0, LV 1, VL 2, VV 3
+        if(w=="LL"){start=0;end=0;}
+        if(w=="LV"){start=1;end=1;}
+        if(w=="VL"){start=2;end=2;}
+        if(w=="VV"){start=3;end=3;}
+        for(int i=0;i<N;i++){
+            string c;
+            cin>>c;
+            if(c=="LL")chain[0]++;
+            if(c=="LV")chain[1]++;
+            if(c=="VL")chain[2]++;
+            if(c=="VV")chain[3]++;
+        }
+        Count=0;
+        Dfs(start,end,K);
+            if(Count==0)cout<<"NO"<<endl;
+            else{
+                cout<<"YES"<<endl<<Count<<endl;
+            }
+        //for(int i=0;i<4;i++)cout<<chain[i]<<endl;
+        
+    }
+    return 0;
+}
