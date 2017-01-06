@@ -1,0 +1,64 @@
+// ConsoleApplication29.cpp : Defines the entry point for the console application.
+//
+
+//#include "stdafx.h"
+#include<iostream>
+#include<cstring>
+using namespace std;
+#define max 202
+int maze[max][max];
+int steps,minstep;
+int m, n;
+void Dfs(int sx, int sy, int ex, int ey) {
+	if (sx == ex&&sy == ey) {
+		if (steps < minstep)minstep = steps;
+		return;
+	}
+	if (steps >= minstep-1)return;
+	int move[4][2] = { {1,0},{0,1},{0,-1},{-1,0} };
+	for (int i = 0; i < 4; i++) {
+		int x = sx + move[i][0];
+		int y = sy + move[i][1];
+		if (x < 0 || y < 0 || x >= m || y >= n)continue;
+		if (maze[x][y] == 1)continue;
+		maze[x][y] = 1;
+		steps++;
+		Dfs(x, y, ex, ey);
+		maze[x][y] = 0;
+		steps--;
+	}
+}
+
+int main()
+{
+	int T;
+	cin >> T;
+	while (T--) {		
+		steps = 0;
+		minstep = 1 << 30;
+		//memset(maze, 1, sizeof(maze));
+		cin >> m >> n;
+		int sx, sy, ex, ey;
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				char a;
+				cin >> a;
+				if (a == '.')maze[i][j] = 0;
+				else if (a == 'S') { sx = i; sy = j; maze[i][j] = 0;}
+				else if (a == 'E') { ex = i; ey = j; maze[i][j] = 0;}
+				else maze[i][j] = 1;
+				}
+		}
+		//for (int i = 0; i < m; i++) {
+			//for (int j = 0; j < n; j++) {
+				//cout << maze[i][j] << " ";
+			//}
+			//cout << endl;
+		//}
+		Dfs(sx, sy, ex, ey);
+		if (minstep == 1 << 30)cout << "oop!" << endl;
+		else cout << minstep << endl;
+	}
+    return 0;
+}
+
