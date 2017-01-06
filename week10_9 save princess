@@ -1,0 +1,125 @@
+//
+//  main.cpp
+//  week10_9
+//
+//  Created by Daxing Gao on 17/1/6.
+//  Copyright © 2017年 Daxing Gao. All rights reserved.
+//
+
+#include <iostream>
+#include<cstring>
+#include<queue>
+struct step{
+    int x;
+    int y;
+    int steps;
+    bool get_stone;
+    int stone;
+    step(int a,int b,int c,int ss,bool g):x(a),y(b),steps(c),stone(ss),get_stone(g){}
+};
+std::queue<step> q;
+using namespace std;
+#define max 202
+int maze[max][max];
+int stone[5];
+int gate[10][2];
+int gaten=0;
+int R,C,k;
+int visited[max][max][1<<5];
+bool get_enough(int i){
+    int m=0;
+    for(int j=0;j<5;j++){
+        m+=i%2;
+        i/=2;
+    }
+    return m>=k;
+}
+
+int isgate(int x,int y){
+    for(int i=0;i<gaten;i++){
+        if(gate[i][0]==x&&gate[i][1]==y)return i;
+    }
+    return -1;
+}
+
+void Bfs(int sx,int sy,int ex,int ey){
+    q.push(step(sx,sy,0,0,false));
+    int move[4][2]={{0,1},{1,0},{0,-1,},{-1,0}};
+    while(!q.empty()){
+        step a=q.front();
+        if((a.x==ex&&a.y==ey)&&a.get_stone){
+            break;
+        }
+        if(isgate(a.x,a.y)>-1){
+            int m=isgate(a.x,a.y);
+            for(int i=0;i<gaten;i++){
+                if(i!=m&&!visited[gate[i][0]][gate[i][1]][a.stone]){
+                    visited[gate[i][0]][gate[i][1]][a.stone]=1;
+                    q.push(step(gate[i][0],gate[i][1],a.steps,a.stone,a.get_stone));
+                }
+            }
+        }
+        for(int i=0;i<4;i++){
+            int x=a.x+move[i][0];
+            int y=a.y+move[i][1];
+            if(x<0||y<0||x>=R||y>=C)continue;
+            if(maze[x][y]==-2)continue;
+            if(visited[x][y][a.stone])continue;
+            int ss=a.stone;
+            bool gs=a.get_stone;
+            if(maze[x][y]>-1){
+                int st=maze[x][y];
+                ss=ss|(1<<st);
+                if(get_enough(ss))gs=true;
+            }
+            visited[x][y][a.stone]=1;
+            q.push(step(x,y,a.steps+1,ss,gs));
+        }
+        q.pop();
+    }
+    if(q.empty())cout<<"oop!"<<endl;
+    else cout<<q.front().steps<<endl;
+    
+}
+
+int main(int argc, const char * argv[]) {
+    int T;
+    cin>>T;
+    while(T--){
+        int sx=0,sy=0,ex=0,ey=0;
+        gaten=0;
+        cin>>R>>C>>k;
+        for(int i=0;i<R;i++){
+            for(int j=0;j<C;j++){
+                char a;
+                cin>>a;
+                visited[i][j][0]=0;
+                visited[i][j][1]=0;
+                if(a=='#')maze[i][j]=-2;
+                else{
+                    maze[i][j]=-1;
+                    if(a=='$'){
+                        gate[gaten][0]=i;
+                        gate[gaten][1]=j;
+                        gaten++;
+                    }
+                    if(a=='S'){
+                        sx=i;sy=j;
+                    }
+                    if(a=='E'){
+                        ex=i;ey=j;
+                    }
+                    if(a>='0'&&a<='4')maze[i][j]=a-'0';
+                }
+            }
+        }
+        memset(stone,0,sizeof(stone));
+        //for(int i=0;i<R;i++){
+            //for(int j=0;j<C;j++)cout<<maze[i][j]<<" ";
+            //cout<<endl;
+        //}
+        Bfs(sx,sy,ex,ey);
+        
+    }
+    return 0;
+}
