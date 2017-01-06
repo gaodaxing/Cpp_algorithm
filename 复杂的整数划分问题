@@ -1,0 +1,57 @@
+// ConsoleApplication30.cpp : Defines the entry point for the console application.
+//
+
+#include "stdafx.h"
+#include<iostream>
+using namespace std;
+#define max 60
+
+int main()
+{
+	int n;
+	while (cin >> n) {
+		if (n == 0)break;
+		int k;
+		cin >> k;
+		int a[max][max][max];//N,k,smallest
+		for (int i = 0; i <= n; i++) {
+			for (int s = 0; s <= n; s++) {
+				if (s == i)a[i][1][s] = 1;
+				for (int j = 0; j <= k; j++) {
+					if (j != 1||s!=i)a[i][j][s] = 0;
+				}
+			}
+		}
+		for (int i = 2; i <= n; i++) {
+			for (int j = 1; j <= i; j++) {
+				for (int s = 1; s * 2 <= i; s++) {
+					for(int r=s;r+s<=i;r++)a[i][j][s] += a[i - s][j - 1][r];
+				}
+			}
+		}
+		int sumk = 0;
+		for (int s = 0; s <= n; s++) {
+			sumk += a[n][k][s];
+		}
+		cout << sumk << endl;
+		int b[max][max];
+		for (int i = 0; i <= n; i++) {
+			for (int s = 0; s <= n; s++) {
+				if (s == i&&i % 2 == 1)b[i][s] = 1;
+				else b[i][s] = 0;
+			}
+		}
+		for (int i = 2; i <= n; i++) {
+			for (int s = 1; s * 2 <= i; s += 2) {
+				for (int r = s; r + s <= i; r+=2)b[i][s] += b[i - s][r];
+			}
+		}
+		int sumodd = 0;
+		for (int s = 0; s <= n; s++) {
+			sumodd += b[n][s];
+		}
+		cout << sumodd<<endl;
+	}
+    return 0;
+}
+
