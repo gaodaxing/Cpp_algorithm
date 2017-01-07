@@ -1,0 +1,126 @@
+// ConsoleApplication31.cpp : Defines the entry point for the console application.
+//
+
+//#include "stdafx.h"
+#include<iostream>
+#include<algorithm>
+using namespace std;
+#define max 702
+struct point{
+	int x; int y; int n;
+	point() {}
+	point(int a, int b, int c) :x(a), y(b), n(c) {}
+	bool operator<(const point& a)const { if (x == a.x)return y < a.y;
+	 return x < a.x;
+	}
+};
+point p[max];
+int R, C, N;
+bool find_point(int xp, int yp) {
+	for (int i = 0; i < N; i++) {
+		if (p[i].x == xp&&p[i].y == yp&&p[i].n>0)return true;
+	}
+	return false;
+}
+int find_point_num(int x, int y) {
+	for (int i = 0; i < N; i++) {
+		if (p[i].x == x&&p[i].y == y)return i;
+	}
+	return -1;
+}
+int find_route(int i, int j) {//i<j
+	int dx = p[j].x- p[i].x;//dx>0
+	int dy = p[j].y - p[i].y;
+	int Count = 2;
+	int l = 2;
+	int xp = p[i].x - dx;
+	int yp = p[i].y - dy;
+	if (xp >= 0 && xp < R&&yp >= 0 && yp < C)return -1;
+	while (true) {
+		xp = p[i].x + dx*l;
+		yp = p[i].y + dy*l;
+		if (xp >= R || xp < 0 || yp >= C || yp < 0)break;
+		if (!find_point(xp, yp))return -1;
+		else Count++;
+		l++;		
+	}	
+	if (Count > 2)return Count;
+	else return -1;
+}
+int Min;
+int nn;
+void move(int i, int j) {
+	int dx = p[j].x - p[i].x;//dx>0
+	int dy = p[j].y - p[i].y;
+	int x, y,ii;
+	p[i].n--;
+	p[j].n--;
+	for (int l = 2;; l++) {
+		x = p[i].x + l*dx;
+		y = p[i].y + l*dy;
+		if (x >= R || x < 0 || y>=C || y < 0)break;
+		ii = find_point_num(x, y);
+		p[ii].n--;
+	}
+}
+void unmove(int i, int j) {
+	int dx = p[j].x - p[i].x;//dx>0
+	int dy = p[j].y - p[i].y;
+	int x, y, ii;
+	p[i].n++;
+	p[j].n++;
+	for (int l = 2;; l++) {
+		x = p[i].x + l*dx;
+		y = p[i].y + l*dy;
+		if (x >= R || x < 0 || y>=C || y < 0)break;
+		ii = find_point_num(x, y);
+		p[ii].n++;
+	}
+}
+void Dfs(int k) {
+	if (k == 0) {
+		if (nn < Min) { Min = nn; return; }
+	}
+	else {
+		if (nn >= Min-1)return;
+		int i;
+		for (i = 0; i < N; i++) {
+			if (p[i].n > 0)break;
+		}
+		for (int j = i + 1; j < N; j++) {
+			if (p[j].n <= 0)continue;
+			int m = find_route(i, j);
+			if (m>2) {
+				move(i, j);
+				nn++;
+				Dfs(k - m);
+				nn--;
+				unmove(i, j);
+			}
+		}
+	}
+}
+
+int main()
+{
+	int T;
+	cin >> T;
+	while (T--) {
+
+		cin >> R >> C >> N;
+		int a, b, c;
+		int sum = 0;
+		for (int i = 0; i < N; i++) {
+			cin >> a >> b >> c;
+			sum += c;
+			p[i] = point(a - 1, b - 1, c);
+		}
+		sort(p, p + N);
+		nn = 0;
+		Min = 1 << 30;
+		Dfs(sum);
+		if (Min < (1 << 30))cout << Min << endl;
+	}
+    return 0;
+}
+
